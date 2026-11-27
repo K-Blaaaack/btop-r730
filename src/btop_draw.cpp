@@ -20,6 +20,7 @@ tab-size = 4
 #include <array>
 #include <cmath>
 #include <iterator>
+#include <map>
 #include <ranges>
 #include <stdexcept>
 #include <string>
