@@ -1,0 +1,11 @@
+[Unit]
+Description=KBkernel server metrics (Dell iDRAC via IPMI) for btop
+After=openipmi.service ipmi.service
+
+[Service]
+ExecStart=/usr/local/sbin/kb-server-metrics.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
