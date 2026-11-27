@@ -1638,11 +1638,16 @@ static int optionsMenu(const string& key) {
 					}
 					//? Description of selected option
 					out += Fx::reset + Theme::c("title") + Fx::b;
-					for (int cyy = y+7; const auto& desc : categories[selected_cat][i]) {
-						if (cyy++ == y+7) continue;
-						else if (cyy == y+10) out += Theme::c("main_fg") + Fx::ub;
+					const auto cn_desc = Lang::desc(option);
+					const bool use_cn = not cn_desc.empty();
+					const auto& desc_lines = use_cn ? cn_desc : categories[selected_cat][i];
+					int cyy = y + 7;
+					for (const auto& desc : desc_lines) {
+						if (not use_cn and cyy == y + 7) { ++cyy; continue; }
+						if (cyy == y + 10) out += Theme::c("main_fg") + Fx::ub;
 						else if (cyy > y + height + 4) break;
 						out += Mv::to(cyy, x+32) + desc;
+						++cyy;
 					}
 				}
 			}

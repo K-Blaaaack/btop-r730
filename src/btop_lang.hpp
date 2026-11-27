@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 namespace Lang {
     bool zh();
@@ -10,4 +11,5 @@ namespace Lang {
     std::string word(const std::string& w);
     std::string opt(const std::string& key);
     std::string tr(const std::string& text);
+    std::vector<std::string> desc(const std::string& key);
 }
