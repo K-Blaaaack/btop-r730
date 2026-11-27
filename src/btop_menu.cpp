@@ -519,6 +519,10 @@ namespace Menu {
 				"entries.",
 				"",
 				"Example: \"4:0 5:1 6:3\""},
+			{"language",
+				"UI language.",
+				"",
+				"\"en\" or \"zh\"."},
 			{"temp_scale",
 				"Which temperature scale to use.",
 				"",
@@ -1299,6 +1303,7 @@ static int optionsMenu(const string& key) {
 			{"color_theme", std::cref(Theme::themes)},
 			{"log_level", std::cref(Logger::log_levels)},
 			{"temp_scale", std::cref(Config::temp_scales)},
+			{"language", std::cref(Config::languages)},
 		#ifdef __linux__
 			{"freq_mode", std::cref(Config::freq_modes)},
 		#endif

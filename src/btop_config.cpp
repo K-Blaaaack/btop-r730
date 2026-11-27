@@ -165,6 +165,7 @@ namespace Config {
 								"#* Example: \"4:0 5:1 6:3\""},
 
 		{"temp_scale", 			"#* Which temperature scale to use, available values: \"celsius\", \"fahrenheit\", \"kelvin\" and \"rankine\"."},
+		{"language", 			"#* UI language, \"en\" or \"zh\"."},
 
 		{"base_10_sizes",		"#* Use base 10 for bits/bytes sizes, KB = 1000 instead of KiB = 1024."},
 
@@ -269,6 +270,7 @@ namespace Config {
 		{"selected_battery", "Auto"},
 		{"cpu_core_map", ""},
 		{"temp_scale", "celsius"},
+		{"language", "en"},
 	#ifdef __linux__
 		{"freq_mode", "first"},
 	#endif

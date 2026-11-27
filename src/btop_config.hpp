@@ -50,6 +50,7 @@ namespace Config {
 #endif
 		};
 	const vector<string> temp_scales = { "celsius", "fahrenheit", "kelvin", "rankine" };
+	const vector<string> languages = { "en", "zh" };
 #ifdef __linux__
 	const vector<string> freq_modes = { "first", "range", "lowest", "highest", "average" };
 #endif

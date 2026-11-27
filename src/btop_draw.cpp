@@ -36,6 +36,7 @@ tab-size = 4
 #include "btop_menu.hpp"
 #include "btop_shared.hpp"
 #include "btop_theme.hpp"
+#include "btop_lang.hpp"
 #include "btop_tools.hpp"
 
 using std::array;
@@ -830,7 +831,7 @@ namespace Cpu {
 					upstr = trans(upstr);
 				}
 				out += Mv::to(y + (single_graph or not Config::getB("cpu_invert_lower") ? 1 : height - 2), x + 2)
-					+ Theme::c("graph_text") + "up" + Mv::r(1) + upstr;
+					+ Theme::c("graph_text") + Lang::get("uptime") + Mv::r(1) + upstr;
 			}
 
 		#ifdef __linux__
@@ -948,24 +949,25 @@ namespace Cpu {
 				int row = 0;
 				auto line_out = [&](const string& label, const string& value, const string& color = "main_fg") {
 					if (row > height - 3) return;
-					string text = fmt::format("{:<9}", label) + value;
+					string label_text = Lang::pad(label, 9);
+					string text = label_text + value;
 					if ((int)text.size() > panel_w) text.resize(panel_w);
 					out += Mv::to(y + 2 + row, x + 2) + Theme::c("inactive_fg")
-						+ fmt::format("{:<9}", label) + Theme::c(color) + text.substr(9);
+						+ label_text + Theme::c(color) + value;
 					++row;
 				};
 				out += Mv::to(y + 1, x + 2) + Theme::c("title") + Fx::b + "iDRAC" + Fx::ub
 					+ Theme::c("div_line") + " " + Symbols::h_line * max(3, panel_w - 8);
 
-				line_out("SYS PWR", val("pwr") + " W  avg " + val("pwr_avg") + "  max " + val("pwr_max"));
-				line_out("TEMP", "in " + val("inlet") + " -> ex " + val("exhaust") + " °C");
-				line_out("CPU1/2", val("cpu1") + " / " + val("cpu2") + " °C");
-				line_out("FAN1-3", val("fan1") + "  " + val("fan2") + "  " + val("fan3"));
-				line_out("FAN4-6", val("fan4") + "  " + val("fan5") + "  " + val("fan6"));
-				line_out("PSU", val("psu") + "/2 OK", "hi_fg");
-				line_out("SEL/INTR", val("sel") + " / " + val("intrusion"), val("intrusion") == "clear" ? "hi_fg" : "hi_fg");
-				line_out("FW", val("bios") + " / " + val("idrac"));
-				line_out("MODEL", val("model") + "  " + val("service"));
+				line_out(Lang::get("sys_pwr"), val("pwr") + " W  avg " + val("pwr_avg") + "  max " + val("pwr_max"));
+				line_out(Lang::get("temp"), "in " + val("inlet") + " -> ex " + val("exhaust") + " °C");
+				line_out(Lang::get("cpu12"), val("cpu1") + " / " + val("cpu2") + " °C");
+				line_out(Lang::get("fan13"), val("fan1") + "  " + val("fan2") + "  " + val("fan3"));
+				line_out(Lang::get("fan46"), val("fan4") + "  " + val("fan5") + "  " + val("fan6"));
+				line_out(Lang::get("psu"), val("psu") + "/2 OK", "hi_fg");
+				line_out(Lang::get("sel_intr"), val("sel") + " / " + val("intrusion"), val("intrusion") == "clear" ? "hi_fg" : "hi_fg");
+				line_out(Lang::get("fw"), val("bios") + " / " + val("idrac"));
+				line_out(Lang::get("model"), val("model") + "  " + val("service"));
 			}
 		}
 
@@ -973,7 +975,7 @@ namespace Cpu {
 		if (cy < b_height - 1 and cc <= b_columns) {
 			cy = b_height - 2 - n_gpus_to_show;
 
-			string load_avg_pre = "Load avg:";
+			string load_avg_pre = Lang::get("load_avg").empty() ? "Load avg:" : Lang::get("load_avg");
 			string load_avg;
 
 			for (const auto& val : cpu.load_avg) {
