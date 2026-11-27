@@ -1007,14 +1007,35 @@ namespace Cpu {
 
 	long long get_cpuConsumptionUJoules()
 	{
-		long long consumption = -1;
-		const auto rapl_power_usage_path = "/sys/class/powercap/intel-rapl:0/energy_uj";
-		std::ifstream file(rapl_power_usage_path);
-		if(file.good())
-		{
-			file >> consumption;
+		// KBkernel fork: sum all RAPL packages (multi-socket servers)
+		static std::array<long long, 8> previous{};
+		static long long accumulated = -1;
+		long long raw_sum = 0;
+		bool any = false;
+		for (int i = 0; i < (int)previous.size(); ++i) {
+			const auto base = "/sys/class/powercap/intel-rapl:" + std::to_string(i);
+			std::ifstream file(base + "/energy_uj");
+			if (!file.good()) break;
+			long long current = -1;
+			file >> current;
+			if (current < 0) break;
+			any = true;
+			raw_sum += current;
+			if (previous[i] > 0) {
+				long long delta = current - previous[i];
+				if (delta < 0) {
+					long long range = -1;
+					std::ifstream range_file(base + "/max_energy_range_uj");
+					range_file >> range;
+					if (range > 0) delta += range;
+				}
+				if (delta > 0) accumulated += delta;
+			}
+			previous[i] = current;
 		}
-		return consumption;
+		if (!any) return -1;
+		if (accumulated < 0) accumulated = raw_sum;
+		return accumulated;
 	}
 
 	float get_cpuConsumptionWatts()

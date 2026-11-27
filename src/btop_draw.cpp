@@ -549,6 +549,7 @@ namespace Cpu {
 		if (force_redraw) redraw = true;
 		bool show_temps = (Config::getB("check_temp") and got_sensors);
 		bool show_watts = (Config::getB("show_cpu_watts") and supports_watts);
+		const bool show_graph = Config::getB("show_cpu_graph");
 		auto single_graph = Config::getB("cpu_single_graph");
 		bool hide_cores = show_temps and (cpu_temp_only or not Config::getB("show_coretemp"));
 		const int extra_width = (hide_cores ? max(6, 6 * b_column_size) : (b_columns == 1 && !show_temps) ? 8 : 0);
@@ -588,8 +589,8 @@ namespace Cpu {
 
 		//* Redraw elements not needed to be updated every cycle
 		if (redraw) {
-			mid_line = (not single_graph and graph_up_field != graph_lo_field);
-			graph_up_height = (single_graph ? height - 2 : ceil((double)(height - 2) / 2) - (mid_line and height % 2 != 0));
+			mid_line = (show_graph and not single_graph and graph_up_field != graph_lo_field);
+			graph_up_height = (not show_graph ? 0 : (single_graph ? height - 2 : ceil((double)(height - 2) / 2) - (mid_line and height % 2 != 0)));
 			graph_low_height = height - 2 - graph_up_height - mid_line;
 			const int button_y = cpu_bottom ? y + height - 1 : y;
 			out += box;
@@ -812,8 +813,10 @@ namespace Cpu {
 					out += graphs[0](safeVal(cpu.cpu_percent, graph_field), (data_same or redraw));
 			};
 
-			draw_graphs(graphs_upper, graph_up_height, graph_up_width, graph_up_field);
-			if (not single_graph) {
+			if (show_graph) {
+				draw_graphs(graphs_upper, graph_up_height, graph_up_width, graph_up_field);
+			}
+			if (show_graph and not single_graph) {
 				out += Mv::to(y + graph_up_height + 1 + mid_line, x + 1);
 				draw_graphs(graphs_lower, graph_low_height, graph_low_width, graph_lo_field);
 			}
@@ -923,6 +926,19 @@ namespace Cpu {
 			if ((++cy > ceil((double)Shared::coreCount / b_columns) or cy == max_row) and n != Shared::coreCount - 1) {
 				if (++cc >= b_columns) break;
 				cy = 1; cx = (b_width / b_columns) * cc;
+			}
+		}
+
+		//? KBkernel fork: Dell iDRAC / server metrics panel (left area)
+		if (Config::getB("show_server_panel") and not show_graph) {
+			std::ifstream metrics_file("/run/kb-server-metrics");
+			string metric_line;
+			int metric_row = 0;
+			const int metric_max_width = b_x - x - 3;
+			while (std::getline(metrics_file, metric_line) and metric_row < height - 3) {
+				if ((int)metric_line.size() > metric_max_width) metric_line.resize(max(0, metric_max_width));
+				out += Mv::to(y + 2 + metric_row, x + 2) + Theme::c("main_fg") + metric_line;
+				++metric_row;
 			}
 		}
 

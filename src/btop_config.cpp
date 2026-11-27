@@ -150,6 +150,8 @@ namespace Config {
 		{"show_uptime", 		"#* Shows the system uptime in the CPU box."},
 
 		{"show_cpu_watts",		"#* Shows the CPU package current power consumption in watts. Requires running `make setcap` or `make setuid` or running with sudo."},
+		{"show_cpu_graph",		"#* Shows the CPU usage graph in the CPU box."},
+		{"show_server_panel",		"#* KBkernel: show Dell iDRAC metrics (fans/temps/power) in the CPU box left area."},
 
 		{"check_temp", 			"#* Show cpu temperature."},
 
@@ -312,6 +314,8 @@ namespace Config {
 		{"cpu_bottom", false},
 		{"show_uptime", true},
 		{"show_cpu_watts", true},
+		{"show_cpu_graph", true},
+		{"show_server_panel", true},
 		{"check_temp", true},
 		{"show_coretemp", true},
 		{"show_cpu_freq", true},
