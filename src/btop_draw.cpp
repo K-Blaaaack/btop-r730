@@ -929,16 +929,33 @@ namespace Cpu {
 			}
 		}
 
-		//? btop-r730 fork: Dell iDRAC / server metrics panel (left area)
+		//? btop-r730: Dell iDRAC / server metrics panel (left area)
 		if (Config::getB("show_server_panel") and not show_graph) {
 			std::ifstream metrics_file("/run/btop-server-metrics");
-			string metric_line;
-			int metric_row = 0;
-			const int metric_max_width = b_x - x - 3;
-			while (std::getline(metrics_file, metric_line) and metric_row < height - 3) {
-				if ((int)metric_line.size() > metric_max_width) metric_line.resize(max(0, metric_max_width));
-				out += Mv::to(y + 2 + metric_row, x + 2) + Theme::c("main_fg") + metric_line;
-				++metric_row;
+			std::map<string, string> metrics;
+			string line;
+			while (std::getline(metrics_file, line)) {
+				auto eq = line.find('=');
+				if (eq != string::npos) metrics[line.substr(0, eq)] = line.substr(eq + 1);
+			}
+			auto val = [&](const string& key) -> string {
+				auto it = metrics.find(key);
+				return it == metrics.end() ? "—" : it->second;
+			};
+			const int panel_w = b_x - x - 3;
+			if (panel_w > 18) {
+				auto row = [&](int r, const string& label, const string& value, const string& color) {
+					out += Mv::to(y + 2 + r, x + 2) + Theme::c("inactive_fg") + fmt::format("{:<8}", label)
+						+ Theme::c(color) + value;
+				};
+				out += Mv::to(y + 1, x + 2) + Theme::c("title") + Fx::b + "iDRAC" + Fx::ub
+					+ Theme::c("div_line") + " " + Symbols::h_line * max(3, panel_w - 8);
+				row(1, "PWR", val("pwr") + " W", "main_fg");
+				row(2, "TEMP", val("inlet") + " → " + val("exhaust") + " °C", "main_fg");
+				row(3, "FAN1-3", val("fan1") + "  " + val("fan2") + "  " + val("fan3"), "main_fg");
+				row(4, "FAN4-6", val("fan4") + "  " + val("fan5") + "  " + val("fan6"), "main_fg");
+				row(5, "PSU", val("psu") + "/2 OK", "hi_fg");
+				row(6, "SEL", val("sel") + " entries", "main_fg");
 			}
 		}
 
