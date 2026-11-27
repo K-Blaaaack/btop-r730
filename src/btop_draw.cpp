@@ -951,7 +951,7 @@ namespace Cpu {
 				};
 				out += Mv::to(y + 1, x + 2) + Theme::c("title") + Fx::b + "iDRAC" + Fx::ub
 					+ Theme::c("div_line") + " " + Symbols::h_line * max(3, panel_w - 8);
-				row(1, "PWR", val("pwr") + " W", "main_fg");
+				row(1, "SYS PWR", val("pwr") + " W", "main_fg");
 				row(2, "TEMP", val("inlet") + " → " + val("exhaust") + " °C", "main_fg");
 				row(3, "FAN1-3", val("fan1") + "  " + val("fan2") + "  " + val("fan3"), "main_fg");
 				row(4, "FAN4-6", val("fan4") + "  " + val("fan5") + "  " + val("fan6"), "main_fg");
