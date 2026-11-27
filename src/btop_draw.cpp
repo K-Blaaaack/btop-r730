@@ -963,8 +963,7 @@ namespace Cpu {
 				line_out("FAN1-3", val("fan1") + "  " + val("fan2") + "  " + val("fan3"));
 				line_out("FAN4-6", val("fan4") + "  " + val("fan5") + "  " + val("fan6"));
 				line_out("PSU", val("psu") + "/2 OK", "hi_fg");
-				line_out("SEL", val("sel") + " entries");
-				line_out("INTRUSION", val("intrusion"), val("intrusion") == "clear" ? "hi_fg" : "hi_fg");
+				line_out("SEL/INTR", val("sel") + " / " + val("intrusion"), val("intrusion") == "clear" ? "hi_fg" : "hi_fg");
 				line_out("FW", val("bios") + " / " + val("idrac"));
 				line_out("MODEL", val("model") + "  " + val("service"));
 			}
