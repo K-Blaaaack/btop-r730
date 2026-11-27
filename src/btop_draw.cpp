@@ -939,24 +939,36 @@ namespace Cpu {
 				auto eq = line.find('=');
 				if (eq != string::npos) metrics[line.substr(0, eq)] = line.substr(eq + 1);
 			}
-			auto val = [&](const string& key) -> string {
+			auto val = [&](const string& key, const string& fallback = "—") -> string {
 				auto it = metrics.find(key);
-				return it == metrics.end() ? "—" : it->second;
+				return (it == metrics.end() or it->second.empty()) ? fallback : it->second;
 			};
 			const int panel_w = b_x - x - 3;
 			if (panel_w > 18) {
-				auto row = [&](int r, const string& label, const string& value, const string& color) {
-					out += Mv::to(y + 2 + r, x + 2) + Theme::c("inactive_fg") + fmt::format("{:<8}", label)
-						+ Theme::c(color) + value;
+				int row = 1;
+				auto line_out = [&](const string& label, const string& value, const string& color = "main_fg") {
+					if (row >= height - 2) return;
+					string text = fmt::format("{:<9}", label) + value;
+					if ((int)text.size() > panel_w) text.resize(panel_w);
+					out += Mv::to(y + 1 + row, x + 2) + Theme::c("inactive_fg")
+						+ fmt::format("{:<9}", label) + Theme::c(color) + text.substr(9);
+					++row;
 				};
 				out += Mv::to(y + 1, x + 2) + Theme::c("title") + Fx::b + "iDRAC" + Fx::ub
 					+ Theme::c("div_line") + " " + Symbols::h_line * max(3, panel_w - 8);
-				row(1, "SYS PWR", val("pwr") + " W", "main_fg");
-				row(2, "TEMP", val("inlet") + " → " + val("exhaust") + " °C", "main_fg");
-				row(3, "FAN1-3", val("fan1") + "  " + val("fan2") + "  " + val("fan3"), "main_fg");
-				row(4, "FAN4-6", val("fan4") + "  " + val("fan5") + "  " + val("fan6"), "main_fg");
-				row(5, "PSU", val("psu") + "/2 OK", "hi_fg");
-				row(6, "SEL", val("sel") + " entries", "main_fg");
+				row = 2;
+				line_out("SYS PWR", val("pwr") + " W  avg " + val("pwr_avg") + "  max " + val("pwr_max"));
+				line_out("TEMP", "in " + val("inlet") + " -> ex " + val("exhaust") + " °C");
+				line_out("CPU1/2", val("cpu1") + " / " + val("cpu2") + " °C");
+				line_out("FAN1-3", val("fan1") + "  " + val("fan2") + "  " + val("fan3"));
+				line_out("FAN4-6", val("fan4") + "  " + val("fan5") + "  " + val("fan6"));
+				line_out("PSU", val("psu") + "/2 OK", "hi_fg");
+				line_out("SEL", val("sel") + " entries");
+				line_out("INTRUSION", val("intrusion"), val("intrusion") == "clear" ? "hi_fg" : "hi_fg");
+				line_out("BIOS", val("bios"));
+				line_out("iDRAC", val("idrac"));
+				line_out("MODEL", val("model"));
+				line_out("SERVICE", val("service"));
 			}
 		}
 
