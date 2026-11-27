@@ -965,10 +965,8 @@ namespace Cpu {
 				line_out("PSU", val("psu") + "/2 OK", "hi_fg");
 				line_out("SEL", val("sel") + " entries");
 				line_out("INTRUSION", val("intrusion"), val("intrusion") == "clear" ? "hi_fg" : "hi_fg");
-				line_out("BIOS", val("bios"));
-				line_out("iDRAC", val("idrac"));
-				line_out("MODEL", val("model"));
-				line_out("SERVICE", val("service"));
+				line_out("FW", val("bios") + " / " + val("idrac"));
+				line_out("MODEL", val("model") + "  " + val("service"));
 			}
 		}
 
