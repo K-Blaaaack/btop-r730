@@ -40,6 +40,27 @@ int Lang::display_width(const std::string& s) {
     return w;
 }
 
+std::string Lang::box(const std::string& name) {
+    if (!zh()) return name;
+    static const std::unordered_map<std::string, std::string> boxes = {
+        {"cpu", "CPU"}, {"mem", "内存"}, {"disks", "磁盘"},
+        {"net", "网络"}, {"proc", "进程"}, {"gpu", "显卡"}
+    };
+    auto it = boxes.find(name);
+    return it == boxes.end() ? name : it->second;
+}
+
+std::string Lang::word(const std::string& w) {
+    if (!zh()) return w;
+    static const std::unordered_map<std::string, std::string> words = {
+        {"Used", "已用"}, {"Free", "空闲"}, {"Available", "可用"},
+        {"Cached", "缓存"}, {"Total", "总计"}, {"Swap", "交换"},
+        {"Filter", "过滤"}, {"Download", "下载"}, {"Upload", "上传"}
+    };
+    auto it = words.find(w);
+    return it == words.end() ? w : it->second;
+}
+
 std::string Lang::pad(const std::string& s, int width) {
     const int w = display_width(s);
     return s + std::string(w < width ? width - w : 0, ' ');

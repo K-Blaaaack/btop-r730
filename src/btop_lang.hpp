@@ -6,4 +6,6 @@ namespace Lang {
     const std::string& get(const std::string& key);
     int display_width(const std::string& s);
     std::string pad(const std::string& s, int width);
+    std::string box(const std::string& name);
+    std::string word(const std::string& w);
 }
