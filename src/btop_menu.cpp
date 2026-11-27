@@ -19,6 +19,7 @@ tab-size = 4
 #include "btop_menu.hpp"
 
 #include "btop_config.hpp"
+#include "btop_lang.hpp"
 #include "btop_draw.hpp"
 #include "btop_log.hpp"
 #include "btop_shared.hpp"
@@ -1619,7 +1620,7 @@ static int optionsMenu(const string& key) {
 				const auto& value = (option == "color_theme" ? fs::path(Config::getS("color_theme")).stem().string() : Config::getAsString(option));
 
 				out += Mv::to(cy++, x + 1) + (c-1 == selected ? Theme::c("selected_bg") + Theme::c("selected_fg") : Theme::c("title"))
-					+ Fx::b + cjust(capitalize(s_replace(option, "_", " "))
+					+ Fx::b + cjust(Lang::opt(option).empty() ? capitalize(s_replace(option, "_", " ")) : Lang::opt(option)
 						+ (c-1 == selected and selPred.test(isBrowsable)
 							? ' ' + to_string(v_index(optionsList.at(option).get(), (option == "color_theme" ? Config::getS("color_theme") : value)) + 1) + '/' + to_string(optionsList.at(option).get().size())
 							: ""), 29);
