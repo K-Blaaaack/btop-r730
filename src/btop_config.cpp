@@ -151,7 +151,7 @@ namespace Config {
 
 		{"show_cpu_watts",		"#* Shows the CPU package current power consumption in watts. Requires running `make setcap` or `make setuid` or running with sudo."},
 		{"show_cpu_graph",		"#* Shows the CPU usage graph in the CPU box."},
-		{"show_server_panel",		"#* KBkernel: show Dell iDRAC metrics (fans/temps/power) in the CPU box left area."},
+		{"show_server_panel",		"#* btop-r730: show Dell iDRAC metrics (fans/temps/power) in the CPU box left area."},
 
 		{"check_temp", 			"#* Show cpu temperature."},
 

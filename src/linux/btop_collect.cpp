@@ -1007,7 +1007,7 @@ namespace Cpu {
 
 	long long get_cpuConsumptionUJoules()
 	{
-		// KBkernel fork: sum all RAPL packages (multi-socket servers)
+		// btop-r730 fork: sum all RAPL packages (multi-socket servers)
 		static std::array<long long, 8> previous{};
 		static long long accumulated = -1;
 		long long raw_sum = 0;

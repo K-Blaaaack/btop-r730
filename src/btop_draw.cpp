@@ -929,9 +929,9 @@ namespace Cpu {
 			}
 		}
 
-		//? KBkernel fork: Dell iDRAC / server metrics panel (left area)
+		//? btop-r730 fork: Dell iDRAC / server metrics panel (left area)
 		if (Config::getB("show_server_panel") and not show_graph) {
-			std::ifstream metrics_file("/run/kb-server-metrics");
+			std::ifstream metrics_file("/run/btop-server-metrics");
 			string metric_line;
 			int metric_row = 0;
 			const int metric_max_width = b_x - x - 3;

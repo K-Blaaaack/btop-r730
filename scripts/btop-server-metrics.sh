@@ -1,8 +1,8 @@
 #!/bin/sh
-# KBkernel: 采集 Dell iDRAC 指标，写 /run/kb-server-metrics（btop 左侧面板读取）
-# 依赖：ipmitool（root）；服务 kb-server-metrics.service
+# btop-r730: 采集 Dell iDRAC 指标，写 /run/btop-server-metrics（btop 左侧面板读取）
+# 依赖：ipmitool（root）；服务 btop-server-metrics.service
 while :; do
-  tmp=/run/kb-server-metrics.tmp
+  tmp=/run/btop-server-metrics.tmp
   ipmitool sensor 2>/dev/null | awk -F'|' '
     function trim(s){gsub(/^[ \t]+|[ \t]+$/,"",s); return s}
     /^Fan[1-6]/        { fan[substr(trim($1),4,1)] = int($2) }
@@ -14,6 +14,6 @@ while :; do
       printf "TEMP inlet %d°C   exhaust %d°C\n", inlet, exhaust
       printf "PWR  %d W\n", pwr
     }' > "$tmp" 2>/dev/null
-  if [ -s "$tmp" ]; then mv -f "$tmp" /run/kb-server-metrics; fi
+  if [ -s "$tmp" ]; then mv -f "$tmp" /run/btop-server-metrics; fi
   sleep 2
 done
