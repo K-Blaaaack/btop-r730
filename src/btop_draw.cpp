@@ -945,18 +945,18 @@ namespace Cpu {
 			};
 			const int panel_w = b_x - x - 3;
 			if (panel_w > 18) {
-				int row = 1;
+				int row = 0;
 				auto line_out = [&](const string& label, const string& value, const string& color = "main_fg") {
-					if (row >= height - 2) return;
+					if (row > height - 3) return;
 					string text = fmt::format("{:<9}", label) + value;
 					if ((int)text.size() > panel_w) text.resize(panel_w);
-					out += Mv::to(y + 1 + row, x + 2) + Theme::c("inactive_fg")
+					out += Mv::to(y + 2 + row, x + 2) + Theme::c("inactive_fg")
 						+ fmt::format("{:<9}", label) + Theme::c(color) + text.substr(9);
 					++row;
 				};
 				out += Mv::to(y + 1, x + 2) + Theme::c("title") + Fx::b + "iDRAC" + Fx::ub
 					+ Theme::c("div_line") + " " + Symbols::h_line * max(3, panel_w - 8);
-				row = 2;
+
 				line_out("SYS PWR", val("pwr") + " W  avg " + val("pwr_avg") + "  max " + val("pwr_max"));
 				line_out("TEMP", "in " + val("inlet") + " -> ex " + val("exhaust") + " °C");
 				line_out("CPU1/2", val("cpu1") + " / " + val("cpu2") + " °C");
